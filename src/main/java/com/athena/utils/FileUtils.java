@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 public class FileUtils {
     private static InputStream is;
 
-    public static int getLineCount(String filename) throws IOException {
+    public static int getLineCount(String filename) {
         try {
             is = new FileInputStream(filename);
             LineNumberReader lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(is, "UTF-8")));
@@ -41,11 +41,15 @@ public class FileUtils {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             return -1;
         } finally {
-            is.close();
+            try {
+                is.close;
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
-    public static int getBytes(String filename) throws IOException {
+    public static int getBytes(String filename) {
         try {
             is = new FileInputStream(filename);
             return is.available();
@@ -54,29 +58,11 @@ public class FileUtils {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             return -1;
         } finally {
-            is.close();
-        }
-    }
-
-    public static int getUniques(String filename) throws IOException {
-        try {
-            String line;
-            is = new FileInputStream(filename);
-            ArrayList<String> uniqueLines = new ArrayList<String>();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
-            while ((line = reader.readLine()) != null) {
-                if (!uniqueLines.contains(line)) {
-                    uniqueLines.add(line);
-                }
+            try {
+                is.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             }
-            return uniqueLines.size();
-
-        } catch (IOException ex) {
-            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-            return -1;
-        } finally {
-            is.close();
         }
     }
 
@@ -84,27 +70,27 @@ public class FileUtils {
         FileInputStream f = null;
         try {
             f = new FileInputStream(filename);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        FileChannel ch = f.getChannel();
-        MappedByteBuffer mb = null;
-        try {
+            FileChannel ch = f.getChannel();
+            MappedByteBuffer mb;
             mb = ch.map(FileChannel.MapMode.READ_ONLY, 0L, ch.size());
-        } catch (IOException e) {
-            e.printStackTrace();
+            byte[] barray = new byte[8000];
+            int nGet;
+            while (mb.hasRemaining()) {
+                nGet = Math.min(mb.remaining(), 8000);
+                mb.get(barray, 0, nGet);
+            }
+            return barray;
+        } catch (IOException ex) {
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (f != null) {
+                    f.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        byte[] barray = new byte[8000];
-        //long checkSum = 0L;
-        int nGet;
-
-        while(mb.hasRemaining()) {
-            nGet = Math.min(mb.remaining(), 8000);
-            mb.get(barray, 0, nGet);
-            /*for (int i = 0; i < nGet; i++) {
-                checkSum += barray[i];
-            }*/
-        }
-        return barray;
+        return null;
     }
 }
