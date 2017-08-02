@@ -42,7 +42,7 @@ public class FileUtils {
             return -1;
         } finally {
             try {
-                is.close;
+                is.close();
             } catch (IOException ex) {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -66,6 +66,32 @@ public class FileUtils {
         }
     }
 
+    public static int getUniques(String filename) {
+        try {
+            String line;
+            is = new FileInputStream(filename);
+            ArrayList<String> uniqueLines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+            while ((line = reader.readLine()) != null) {
+                if (!uniqueLines.contains(line)) {
+                    uniqueLines.add(line);
+                }
+            }
+            return uniqueLines.size();
+
+        } catch (IOException ex) {
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
+        } finally {
+            try {
+                is.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     public static byte[] getFileChunk(String filename) {
         FileInputStream f = null;
         try {
@@ -75,6 +101,7 @@ public class FileUtils {
             mb = ch.map(FileChannel.MapMode.READ_ONLY, 0L, ch.size());
             byte[] barray = new byte[8000];
             int nGet;
+
             while (mb.hasRemaining()) {
                 nGet = Math.min(mb.remaining(), 8000);
                 mb.get(barray, 0, nGet);

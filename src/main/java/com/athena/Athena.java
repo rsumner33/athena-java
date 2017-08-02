@@ -32,46 +32,55 @@ import java.util.logging.Logger;
 
 public class Athena {
     @Option(name = "-i", aliases = "--input", usage = "Input file to use")
-    private String hashFile_filename = "input.lst";
+    private static String hashFile_filename = "input.lst";
     @Option(name = "-d", aliases = "--dictionary-file", handler = StringArrayOptionHandler.class, usage = "Dictionary file to use")
-    private String[] wordlist_filename;
+    private static String[] wordlist_filename;
     @Option(name = "-m", aliases = "--mode", usage = "Attack mode to use")
-    private int mode;
+    private static int mode;
 
-    private void parseArgs(String[] args) {
-        /*try {
-            CmdLineParser clp = new CmdLineParser(this);
+    private static void parseArgs(String[] args) {
+        try {
+            CmdLineParser clp = new CmdLineParser(Athena.class);
             clp.parseArgument(args);
 
-            hashFile_length = FileUtils.getLineCount(hashFile_filename);
-            hashfile_bytes = FileUtils.getBytes(hashFile_filename);
-            uniques = FileUtils.getUniques(hashFile_filename);
-
-            modeName = Mode.getMode(mode).getModeName();
-
-            if (Mode.getMode(mode).requiresDict()) {
-                wordlist_length = FileUtils.getLineCount(wordlist_filename[0]);
-                wordlist_bytes = FileUtils.getBytes(wordlist_filename[0]);
-            }
-
-            if (Mode.getMode(mode).requiresDict2()) {
-                wordlist_length2 = FileUtils.getLineCount(wordlist_filename[1]);
-                wordlist_bytes2 = FileUtils.getBytes(wordlist_filename[1]);
-            }
-
+//            hashFile_length = FileUtils.getLineCount(hashFile_filename);
+//            hashfile_bytes = FileUtils.getBytes(hashFile_filename);
+//            uniques = FileUtils.getUniques(hashFile_filename);
+//
+//            modeName = Mode.getMode(mode).getModeName();
+//
+//            if (Mode.getMode(mode).requiresDict()) {
+//                wordlist_length = FileUtils.getLineCount(wordlist_filename[0]);
+//                wordlist_bytes = FileUtils.getBytes(wordlist_filename[0]);
+//            }
+//
+//            if (Mode.getMode(mode).requiresDict2()) {
+//                wordlist_length2 = FileUtils.getLineCount(wordlist_filename[1]);
+//                wordlist_bytes2 = FileUtils.getBytes(wordlist_filename[1]);
+//            }
         } catch (CmdLineException ex) {
             Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
+//        } catch (UnsupportedEncodingException ex) {
+//            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (IOException ex) {
+//            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    private void initAttack() {
-        //begin timing
+    private static void initAttack() {
         switch (mode) {
-            case 100:
+            case 101:
+                Dictionary dictionary = new Dictionary(wordlist_filename[0], hashFile_filename);
+                dictionary.attack();
+                break;
+
+            default:
+                break;
         }
+    }
+
+    public static void main(String[] args) {
+        parseArgs(args);
+        initAttack();
     }
 }

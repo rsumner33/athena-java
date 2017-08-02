@@ -29,8 +29,8 @@ public class StringUtils {
 
     public static String byteArrayToHexString(byte[] b) {
         sb.setLength(0);
-        for (byte aB : b) {
-            sb.append(Integer.toHexString((aB & 0xFF) | 0x100).substring(1, 3));
+        for (int i = 0; i < b.length; i++) {
+            sb.append(Integer.toHexString((b[i] & 0xFF) | 0x100).substring(1, 3));
         }
         return sb.toString();
     }
@@ -55,6 +55,10 @@ public class StringUtils {
 
     public static ArrayList<byte[]> formatFileBytes(byte[] b) {
         int high, low = 0;
+
+        if (b[0] == 0) {
+            return null;
+        }
 
         for (int i = 0; i < b.length; i++) {
             if (b[i] == 13) {
