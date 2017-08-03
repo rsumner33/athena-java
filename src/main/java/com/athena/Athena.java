@@ -52,10 +52,8 @@ public class Athena {
 //                wordlist_bytes = FileUtils.getBytes(wordlist_filename[0]);
 //            }
 
-            if (Mode.getMode(mode).requiresDict2()) {
-                if (wordlist_filename[1] == null) {
-                    throw new IOException();
-                }
+            if (Mode.getMode(mode).requiresDict2() && wordlist_filename[1] == null) {
+                throw new IOException();
             }
         } catch (CmdLineException ex) {
             Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
