@@ -20,13 +20,12 @@ package com.athena.utils;
 import java.io.*;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
-/**
- * Created by Jack Green on 26/07/2017.
- */
 public class FileUtils {
     private static InputStream is;
 
@@ -67,29 +66,15 @@ public class FileUtils {
     }
 
     public static int getUniques(String filename) {
-        try {
-            String line;
-            is = new FileInputStream(filename);
-            ArrayList<String> uniqueLines = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-
-            while ((line = reader.readLine()) != null) {
-                if (!uniqueLines.contains(line)) {
-                    uniqueLines.add(line);
-                }
-            }
-            return uniqueLines.size();
+        try (Stream<String> stream = Files.lines(Paths.get(filename))) {
+            return (int)stream
+                        .distinct()
+                        .count();
 
         } catch (IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-            return -1;
-        } finally {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
-            }
         }
+        return -1;
     }
 
     public static byte[] getFileChunk(String filename) {

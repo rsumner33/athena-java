@@ -19,7 +19,6 @@ package com.athena.attacks;
 
 import com.athena.utils.FileUtils;
 import com.athena.utils.HashManager;
-import com.athena.utils.Output;
 import com.athena.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ public class Dictionary extends Attack {
     public Dictionary(String wordlist_filename, String hashes_filename) {
         this.wordlist_filename = wordlist_filename;
         super.setHashman(new HashManager(hashes_filename));
-        super.setOutput(new Output());
     }
 
     public ArrayList<byte[]> getNextCandidates() {

@@ -28,7 +28,6 @@ import static com.athena.utils.StringUtils.byteArrayToString;
 
 public abstract class Attack {
     private HashManager hashman;
-    private Output out;
     private StringBuilder sb = new StringBuilder();
     private ArrayList<byte[]> candidates;
 
@@ -49,15 +48,11 @@ public abstract class Attack {
         byte[] candidateHash = MD5.digest(candidate);
         if (hashman.hashExists(candidateHash)) {
             hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString());
-            out.printCracked(sb.toString(), byteArrayToString(candidate));
+            Output.printCracked(sb.toString(), byteArrayToString(candidate));
         }
     }
 
     public void setHashman(HashManager hashman) {
         this.hashman = hashman;
-    }
-
-    public void setOutput(Output out) {
-        this.out = out;
     }
 }

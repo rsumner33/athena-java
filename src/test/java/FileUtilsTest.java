@@ -13,6 +13,13 @@ public class FileUtilsTest {
         }*/
 
         //System.out.println(FileUtils.getBytes("wordList.txt"));
-        System.out.println(StringUtils.formatFileBytes(FileUtils.getFileChunk("empty.txt")));
+        //System.out.println(StringUtils.formatFileBytes(FileUtils.getFileChunk("empty.txt")));
+
+        long start;
+
+        start = System.currentTimeMillis();
+        System.out.println(FileUtils.getLineCount("test.txt"));
+        System.out.println(FileUtils.getUniques("test.txt"));
+        System.out.println("Test took - " + (System.currentTimeMillis() - start));
     }
 }

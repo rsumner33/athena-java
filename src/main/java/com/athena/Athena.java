@@ -18,7 +18,6 @@
 package com.athena;
 
 import com.athena.attacks.Dictionary;
-import com.athena.utils.FileUtils;
 import com.athena.utils.Output;
 
 import org.kohsuke.args4j.CmdLineException;
@@ -27,7 +26,6 @@ import org.kohsuke.args4j.Option;
 import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,11 +44,6 @@ public class Athena {
             CmdLineParser clp = new CmdLineParser(Athena.class);
             clp.parseArgument(args);
             Output.printStatus("Initialising", hashFile_filename, "MD5", mode, 0);
-
-//            if (Mode.getMode(mode).requiresDict()) {
-//                wordlist_length = FileUtils.getLineCount(wordlist_filename[0]);
-//                wordlist_bytes = FileUtils.getBytes(wordlist_filename[0]);
-//            }
 
             if (Mode.getMode(mode).requiresDict2() && wordlist_filename[1] == null) {
                 throw new IOException();
