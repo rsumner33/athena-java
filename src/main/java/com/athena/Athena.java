@@ -19,6 +19,7 @@ package com.athena;
 
 import com.athena.attacks.Dictionary;
 import com.athena.utils.FileUtils;
+import com.athena.utils.Output;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -37,33 +38,29 @@ public class Athena {
     private static String[] wordlist_filename;
     @Option(name = "-m", aliases = "--mode", usage = "Attack mode to use")
     private static int mode;
+    
+    private static final String VERSION = "2.0";
 
     private static void parseArgs(String[] args) {
         try {
             CmdLineParser clp = new CmdLineParser(Athena.class);
             clp.parseArgument(args);
+            Output.printStatus("Initialising", hashFile_filename, "MD5", mode, 0);
 
-//            hashFile_length = FileUtils.getLineCount(hashFile_filename);
-//            hashfile_bytes = FileUtils.getBytes(hashFile_filename);
-//            uniques = FileUtils.getUniques(hashFile_filename);
-//
-//            modeName = Mode.getMode(mode).getModeName();
-//
 //            if (Mode.getMode(mode).requiresDict()) {
 //                wordlist_length = FileUtils.getLineCount(wordlist_filename[0]);
 //                wordlist_bytes = FileUtils.getBytes(wordlist_filename[0]);
 //            }
-//
-//            if (Mode.getMode(mode).requiresDict2()) {
-//                wordlist_length2 = FileUtils.getLineCount(wordlist_filename[1]);
-//                wordlist_bytes2 = FileUtils.getBytes(wordlist_filename[1]);
-//            }
+
+            if (Mode.getMode(mode).requiresDict2()) {
+                if (wordlist_filename[1] == null) {
+                    throw new IOException();
+                }
+            }
         } catch (CmdLineException ex) {
             Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (UnsupportedEncodingException ex) {
-//            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
-//        } catch (IOException ex) {
-//            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Athena.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -80,6 +77,7 @@ public class Athena {
     }
 
     public static void main(String[] args) {
+        Output.printInit(VERSION);
         parseArgs(args);
         initAttack();
     }
