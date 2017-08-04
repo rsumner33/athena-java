@@ -33,8 +33,9 @@ public class MD5 {
     private static final int[] TABLE_T = new int[64];
     
     static {
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 64; i++) {
             TABLE_T[i] = (int) (long)((1L << 32) * Math.abs(Math.sin(i + 1)));
+        }
     }
     
     public static byte[] digest(byte[] message) {
@@ -87,6 +88,8 @@ public class MD5 {
                     case 3:
                         f = c ^ (b | ~d);
                         bufferIndex = (bufferIndex * 7) & 0x0F;
+                        break;
+                    default:
                         break;
                 }
                 
