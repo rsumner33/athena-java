@@ -64,27 +64,27 @@ public class SHA1 {
         digest[0] = (byte) ((a >> 24) & 0xff);
         digest[1] = (byte) ((a >> 16) & 0xff);
         digest[2] = (byte) ((a >> 8) & 0xff);
-        digest[3] = (byte) ((a) & 0xff);
+        digest[3] = (byte) ((a & 0xff);
         
         digest[4] = (byte) ((b >> 24) & 0xff);
         digest[5] = (byte) ((b >> 16) & 0xff);
         digest[6] = (byte) ((b >> 8) & 0xff);
-        digest[7] = (byte) ((b) & 0xff);
+        digest[7] = (byte) ((b & 0xff);
         
         digest[8] = (byte) ((c >> 24) & 0xff);
         digest[9] = (byte) ((c >> 16) & 0xff);
         digest[10] = (byte) ((c >> 8) & 0xff);
-        digest[11] = (byte) ((c) & 0xff);
+        digest[11] = (byte) ((c & 0xff);
         
         digest[12] = (byte) ((d >> 24) & 0xff);
         digest[13] = (byte) ((d >> 16) & 0xff);
         digest[14] = (byte) ((d >> 8) & 0xff);
-        digest[15] = (byte) ((d) & 0xff);
+        digest[15] = (byte) ((d & 0xff);
         
         digest[16] = (byte) ((e >> 24) & 0xff);
         digest[17] = (byte) ((e >> 16) & 0xff);
         digest[18] = (byte) ((e >> 8) & 0xff);
-        digest[19] = (byte) ((e) & 0xff);
+        digest[19] = (byte) ((e & 0xff);
         
         return digest;
     }
