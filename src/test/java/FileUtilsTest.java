@@ -1,3 +1,5 @@
+import com.athena.hashfamily.Hash;
+import com.athena.hashfamily.md.MD5;
 import com.athena.utils.FileUtils;
 import com.athena.utils.StringUtils;
 
@@ -15,11 +17,8 @@ public class FileUtilsTest {
         //System.out.println(FileUtils.getBytes("wordList.txt"));
         //System.out.println(StringUtils.formatFileBytes(FileUtils.getFileChunk("empty.txt")));
 
-        long start;
-
-        start = System.currentTimeMillis();
-        System.out.println(FileUtils.getLineCount("test.txt"));
-        System.out.println(FileUtils.getUniques("test.txt"));
-        System.out.println("Test took - " + (System.currentTimeMillis() - start));
+        for (byte[] b : StringUtils.formatFileBytes(FileUtils.getFileChunk("test.txt"))) {
+            System.out.println(Arrays.toString(b));
+        }
     }
 }

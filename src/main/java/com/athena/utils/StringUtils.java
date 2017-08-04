@@ -56,11 +56,11 @@ public class StringUtils {
     public static ArrayList<byte[]> formatFileBytes(byte[] b) {
         int high, low = 0;
 
-        if (b[0] == 0) {
-            return null;
-        }
-
         for (int i = 0; i < b.length; i++) {
+            if (b[i] == 0) {
+                return arrlist;
+            }
+
             if (b[i] == 13) {
                 high = i;
                 arrlist.add(Arrays.copyOfRange(b, low, high));

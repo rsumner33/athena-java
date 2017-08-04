@@ -68,8 +68,8 @@ public class FileUtils {
     public static int getUniques(String filename) {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             return (int)stream
-                        .distinct()
-                        .count();
+                    .distinct()
+                    .count();
 
         } catch (IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);

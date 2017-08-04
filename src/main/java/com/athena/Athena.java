@@ -31,19 +31,21 @@ import java.util.logging.Logger;
 
 public class Athena {
     @Option(name = "-i", aliases = "--input", usage = "Input file to use")
-    private static String hashFile_filename = "input.lst";
+    private static String hashFile_filename = "input.txt";
     @Option(name = "-d", aliases = "--dictionary-file", handler = StringArrayOptionHandler.class, usage = "Dictionary file to use")
     private static String[] wordlist_filename;
     @Option(name = "-m", aliases = "--mode", usage = "Attack mode to use")
     private static int mode;
+    @Option(name = "-h", aliases = "--hash-type", usage = "Hash type in input file")
+    private static int hashType;
     
     private static final String VERSION = "2.0";
 
-    private static void parseArgs(String[] args) {
+    private void parseArgs(String[] args) {
         try {
-            CmdLineParser clp = new CmdLineParser(Athena.class);
+            CmdLineParser clp = new CmdLineParser(this);
             clp.parseArgument(args);
-            Output.printStatus("Initialising", hashFile_filename, "MD5", mode, 0);
+            //Output.printStatus("Initialising", hashFile_filename, hashType, mode, 0);
 
             if (Mode.getMode(mode).requiresDict2() && wordlist_filename[1] == null) {
                 throw new IOException();
@@ -58,7 +60,7 @@ public class Athena {
     private static void initAttack() {
         switch (mode) {
             case 101:
-                Dictionary dictionary = new Dictionary(wordlist_filename[0], hashFile_filename);
+                Dictionary dictionary = new Dictionary(wordlist_filename[0], hashFile_filename, hashType);
                 dictionary.attack();
                 break;
 
@@ -69,7 +71,7 @@ public class Athena {
 
     public static void main(String[] args) {
         Output.printInit(VERSION);
-        parseArgs(args);
+        new Athena().parseArgs(args);
         initAttack();
     }
 }

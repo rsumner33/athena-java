@@ -23,8 +23,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 public enum Hash {
-    MD5(100, "MD5", com.athena.hashfamily.md.MD5.class, "[a-f0-9]{32}$"),
-    SHA1(200, "SHA1", com.athena.hashfamily.sha.SHA1.class, "[a-f0-9]{40}$");
+    MD5(100, "MD5", com.athena.hashfamily.md.MD5.class, "[a-fA-F0-9]{32}$"),
+    SHA1(200, "SHA1", com.athena.hashfamily.sha.SHA1.class, "[a-fA-F0-9]{40}$");
     
     private final int code;
     private final String name;
@@ -63,6 +63,15 @@ public enum Hash {
             }
         }
         return codes;
+    }
+
+    public static boolean hashTypeExists(int hashType) {
+        for (Hash h : values()) {
+            if (h.getCode() == hashType) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public int getCode() {

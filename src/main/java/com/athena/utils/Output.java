@@ -18,19 +18,20 @@
 package com.athena.utils;
 
 import com.athena.Mode;
+import com.athena.hashfamily.Hash;
 
 public class Output {
     public static void printInit(String version) {
         System.out.println("Starting AthenaHRT version " + version);
     }    
     
-    public static void printStatus(String status, String hashfile_filename, String hashType, int mode, int recoveredAmt) {
+    public static void printStatus(String status, String hashfile_filename, int hashType, int mode, int recoveredAmt) {
         System.out.println(
             "\nSession...: " + "Athena" +
             "\nStatus....: " + status +
             "\nInput.....: " + hashfile_filename + " (" + FileUtils.getBytes(hashfile_filename) + " bytes)" +
             "\nHashes....: " + FileUtils.getLineCount(hashfile_filename) + " total, " + FileUtils.getUniques(hashfile_filename) + " unique" +
-            "\nHash Type.: " + hashType +
+            "\nHash Type.: " + Hash.getHash(hashType).getName() +
             "\nMode......: " + Mode.getMode(mode).getModeName() +
             "\nRecovered.: " + recoveredAmt + "/" + FileUtils.getLineCount(hashfile_filename) + " (" + (recoveredAmt / FileUtils.getLineCount(hashfile_filename)) * 100 + "%)\n");
     }

@@ -18,6 +18,7 @@
 package com.athena.attacks;
 
 import com.athena.hashfamily.md.MD5;
+import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
 
@@ -30,6 +31,7 @@ public abstract class Attack {
     private HashManager hashman;
     private StringBuilder sb = new StringBuilder();
     private ArrayList<byte[]> candidates;
+    private ArrayList<Integer> hashType;
 
     public abstract ArrayList<byte[]> getNextCandidates();
 
@@ -45,14 +47,38 @@ public abstract class Attack {
     }
 
     private void checkAttempt(byte[] candidate) {
-        byte[] candidateHash = MD5.digest(candidate);
+        byte[] candidateHash = getDigest(candidate);
+
+        /*hashman.printHashes();
+        System.out.println("Hash: " + StringUtils.byteArrayToHexString(candidateHash) + " Bytes: " + Arrays.toString(candidateHash));
+        System.out.println(hashman.hashExists(candidateHash));*/
+
         if (hashman.hashExists(candidateHash)) {
             hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString());
             Output.printCracked(sb.toString(), byteArrayToString(candidate));
+            sb.setLength(0);
         }
+    }
+
+    private byte[] getDigest(byte[] candidate) {
+        switch (hashType.get(0)) {
+            case 100:
+                return MD5.digest(candidate);
+
+            case 200:
+                return SHA1.digest(candidate);
+
+            default:
+                break;
+        }
+        return new byte[0];
     }
 
     public void setHashman(HashManager hashman) {
         this.hashman = hashman;
+    }
+
+    public void setHashType(ArrayList<Integer> hashType) {
+        this.hashType = hashType;
     }
 }

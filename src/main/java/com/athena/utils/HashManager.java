@@ -18,9 +18,11 @@
 package com.athena.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
-import static com.athena.utils.StringUtils.byteArrayToHexString;
+import static com.athena.utils.StringUtils.byteArrayToString;
 
 public class HashManager {
     private HashMap<String, byte[]> hashes;
@@ -36,7 +38,7 @@ public class HashManager {
     private void setHashes(String hashes_filename) {
         ArrayList<byte[]> arr = StringUtils.formatFileBytes(FileUtils.getFileChunk(hashes_filename));
         for (byte[] b : arr) {
-            hashes.put(byteArrayToHexString(b), b);
+            hashes.put(byteArrayToString(b), StringUtils.hexStringToByteArray(StringUtils.byteArrayToString(b)));
         }
     }
 
@@ -53,11 +55,22 @@ public class HashManager {
     }
 
     public boolean hashExists(byte[] hash) {
-        return hashes.containsValue(hash);
+        for (Map.Entry<String, byte[]> entry : hashes.entrySet()) {
+            if (Arrays.equals(entry.getValue(), hash)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void setCracked(String hash) {
         hashes.remove(hash);
         cracked.add(hash);
+    }
+
+    public void printHashes() {
+        for (Map.Entry<String, byte[]> entry : hashes.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + " : " + "Value: " + Arrays.toString(entry.getValue()));
+        }
     }
 }
