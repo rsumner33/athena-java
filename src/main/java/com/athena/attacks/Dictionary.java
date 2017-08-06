@@ -41,7 +41,7 @@ public class Dictionary extends Attack {
     }
 
     public ArrayList<byte[]> getNextCandidates() {
-        return StringUtils.formatFileBytes(FileUtils.getFileChunk(wordlist_filename));
+        return FileUtils.getFileChunk(wordlist_filename);
     }
 
     private void setHashType(int hashType, String hashes_filename) {

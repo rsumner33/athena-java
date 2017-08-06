@@ -69,6 +69,9 @@ public class StringUtils {
 
             if (i == b.length - 1) {
                 high = i + 1;
+                if (low > high) {
+                    low = high;
+                }
                 arrlist.add(Arrays.copyOfRange(b, low, high));
             }
         }

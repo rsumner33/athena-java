@@ -19,6 +19,7 @@ package com.athena;
 
 import com.athena.attacks.Dictionary;
 import com.athena.utils.Output;
+import com.athena.utils.Timer;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -40,6 +41,7 @@ public class Athena {
     private static int hashType;
     
     private static final String VERSION = "2.0";
+    private static Timer timer;
 
     private void parseArgs(String[] args) {
         try {
@@ -58,6 +60,9 @@ public class Athena {
     }
 
     private static void initAttack() {
+        timer = new Timer();
+        timer.startTimer();
+
         switch (mode) {
             case 101:
                 Dictionary dictionary = new Dictionary(wordlist_filename[0], hashFile_filename, hashType);
@@ -67,11 +72,22 @@ public class Athena {
             default:
                 break;
         }
+
+        timer.stopTimer();
+    }
+
+    private static void initPostProcessing() {
+        System.out.println(
+                        "\nStarted: " + timer.getStartDate() +
+                        "\nStopped: " + timer.getEndDate() +
+                        " (" + timer.getElapsedTimeSeconds() + " seconds)"
+        );
     }
 
     public static void main(String[] args) {
         Output.printInit(VERSION);
         new Athena().parseArgs(args);
         initAttack();
+        initPostProcessing();
     }
 }

@@ -22,7 +22,7 @@ import com.athena.hashfamily.Hash;
 
 public class Output {
     public static void printInit(String version) {
-        System.out.println("Starting AthenaHRT version " + version);
+        System.out.println("Starting AthenaHRT version " + version + "\n");
     }    
     
     public static void printStatus(String status, String hashfile_filename, int hashType, int mode, int recoveredAmt) {

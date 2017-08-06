@@ -21,6 +21,7 @@ import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
+import com.athena.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -36,21 +37,22 @@ public abstract class Attack {
     public abstract ArrayList<byte[]> getNextCandidates();
 
     public void attack() {
-        candidates = getNextCandidates();
-        candidates.forEach(this::checkAttempt);
-
-        /*while ((candidates = getNextCandidates()) != null) {
-            for (byte[] candidate : candidates) {
-                checkAttempt(candidate);
+        for (byte[] fileBuffer : getNextCandidates())
+            for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
+                if (!hashman.isAllCracked()) {
+                    checkAttempt(candidate);
+                } else {
+                    return;
+                }
             }
-        }*/
     }
 
     private void checkAttempt(byte[] candidate) {
         byte[] candidateHash = getDigest(candidate);
 
-        /*hashman.printHashes();
-        System.out.println("Hash: " + StringUtils.byteArrayToHexString(candidateHash) + " Bytes: " + Arrays.toString(candidateHash));
+        /*System.out.println();
+        hashman.printHashes();
+        System.out.println("Hash: " + com.athena.utils.StringUtils.byteArrayToHexString(candidateHash) + " Bytes: " + java.util.Arrays.toString(candidateHash));
         System.out.println(hashman.hashExists(candidateHash));*/
 
         if (hashman.hashExists(candidateHash)) {

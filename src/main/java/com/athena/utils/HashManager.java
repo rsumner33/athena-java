@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.athena.utils.StringUtils.byteArrayToString;
 
@@ -36,9 +38,16 @@ public class HashManager {
     }
 
     private void setHashes(String hashes_filename) {
-        ArrayList<byte[]> arr = StringUtils.formatFileBytes(FileUtils.getFileChunk(hashes_filename));
-        for (byte[] b : arr) {
-            hashes.put(byteArrayToString(b), StringUtils.hexStringToByteArray(StringUtils.byteArrayToString(b)));
+        try {
+            for (byte[] fileBuffer : FileUtils.getFileChunk(hashes_filename)) {
+                for (byte[] hash : StringUtils.formatFileBytes(fileBuffer)) {
+                    if (!(hash.length == 0) && !hashes.containsKey(byteArrayToString(hash))) {
+                        hashes.put(byteArrayToString(hash), StringUtils.hexStringToByteArray(StringUtils.byteArrayToString(hash)));
+                    }
+                }
+            }
+        } catch (NullPointerException ex) {
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -48,6 +57,10 @@ public class HashManager {
 
     public ArrayList<String> getCracked() {
         return cracked;
+    }
+
+    public boolean isAllCracked() {
+        return (hashes.isEmpty());
     }
 
     public int getCrackedAmt() {

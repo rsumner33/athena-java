@@ -22,6 +22,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -77,7 +78,7 @@ public class FileUtils {
         return -1;
     }
 
-    public static byte[] getFileChunk(String filename) {
+    public static byte[] getFileChunk_OLD(String filename) {
         FileInputStream f = null;
         try {
             f = new FileInputStream(filename);
@@ -92,6 +93,38 @@ public class FileUtils {
                 mb.get(barray, 0, nGet);
             }
             return barray;
+        } catch (IOException ex) {
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if (f != null) {
+                    f.close();
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<byte[]> getFileChunk(String filename) {
+        FileInputStream f = null;
+        ArrayList<byte[]> barrays = new ArrayList<>();
+
+        try {
+            f = new FileInputStream(filename);
+            FileChannel ch = f.getChannel();
+            MappedByteBuffer mb;
+            mb = ch.map(FileChannel.MapMode.READ_ONLY, 0L, ch.size());
+            int nGet;
+
+            while (mb.hasRemaining()) {
+                byte[] barray = new byte[8000];
+                nGet = Math.min(mb.remaining(), 8000);
+                mb.get(barray, 0, nGet);
+                barrays.add(barray);
+            }
+            return barrays;
         } catch (IOException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
