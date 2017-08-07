@@ -18,8 +18,10 @@
 package com.athena;
 
 import com.athena.attacks.Dictionary;
+import com.athena.utils.FileUtils;
 import com.athena.utils.Output;
 import com.athena.utils.Timer;
+import com.athena.utils.enums.Mode;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;

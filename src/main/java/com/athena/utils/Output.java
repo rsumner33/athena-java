@@ -17,7 +17,7 @@
 
 package com.athena.utils;
 
-import com.athena.Mode;
+import com.athena.utils.enums.Mode;
 import com.athena.hashfamily.Hash;
 
 public class Output {

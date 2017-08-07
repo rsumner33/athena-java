@@ -32,8 +32,7 @@ public enum Hash {
     private final String regex;
     
     private static Map<Integer, Hash> codeToHashMapping;
-    private static ArrayList<Integer> codes;
-    
+
     Hash(int code, String name, Class classname, String regex) {
         this.code = code;
         this.name = name;
@@ -56,7 +55,7 @@ public enum Hash {
     }
     
     public static ArrayList<Integer> getHashType(String hash) {
-        codes = new ArrayList<>();
+        ArrayList<Integer> codes = new ArrayList<>();
         for (Hash h : values()) {
             if ((Pattern.compile(h.getRegex())).matcher(hash).matches()) {
                 codes.add(h.getCode());

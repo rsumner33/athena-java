@@ -1,13 +1,12 @@
 import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.StringUtils;
-import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class HashGen {
-    private static final ArrayList<String> MESSAGES = new ArrayList<>(Arrays.asList("master", "password1", "letmein"));
+    private static final ArrayList<String> MESSAGES = new ArrayList<>(Arrays.asList("fire", "p4ssword", "salad"));
 
     public static void main(String[] args) {
         System.out.print("Messages: ");

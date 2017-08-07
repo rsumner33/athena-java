@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.athena;
+package com.athena.utils.enums;
 
 import java.util.HashMap;
 import java.util.Map;

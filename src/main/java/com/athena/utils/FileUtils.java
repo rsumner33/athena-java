@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 public class FileUtils {
     private static InputStream is;
 
-    public static int getLineCount(String filename) {
+    static int getLineCount(String filename) {
         try {
             is = new FileInputStream(filename);
             LineNumberReader lnr = new LineNumberReader(new BufferedReader(new InputStreamReader(is, "UTF-8")));
@@ -49,7 +49,7 @@ public class FileUtils {
         }
     }
 
-    public static int getBytes(String filename) {
+    static int getBytes(String filename) {
         try {
             is = new FileInputStream(filename);
             return is.available();
@@ -66,7 +66,7 @@ public class FileUtils {
         }
     }
 
-    public static int getUniques(String filename) {
+    static int getUniques(String filename) {
         try (Stream<String> stream = Files.lines(Paths.get(filename))) {
             return (int)stream
                     .distinct()

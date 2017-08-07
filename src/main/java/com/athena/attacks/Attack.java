@@ -17,13 +17,21 @@
 
 package com.athena.attacks;
 
+import com.athena.Athena;
+import com.athena.hashfamily.Hash;
 import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
 import com.athena.utils.StringUtils;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.athena.utils.StringUtils.byteArrayToHexString;
 import static com.athena.utils.StringUtils.byteArrayToString;
@@ -31,7 +39,6 @@ import static com.athena.utils.StringUtils.byteArrayToString;
 public abstract class Attack {
     private HashManager hashman;
     private StringBuilder sb = new StringBuilder();
-    private ArrayList<byte[]> candidates;
     private ArrayList<Integer> hashType;
 
     public abstract ArrayList<byte[]> getNextCandidates();
@@ -76,11 +83,20 @@ public abstract class Attack {
         return new byte[0];
     }
 
-    public void setHashman(HashManager hashman) {
+    void setHashman(HashManager hashman) {
         this.hashman = hashman;
     }
 
-    public void setHashType(ArrayList<Integer> hashType) {
-        this.hashType = hashType;
+    void setHashType(int hashType, String hashes_filename) {
+        if (hashType == 0 || !Hash.hashTypeExists(hashType)) {
+            try (BufferedReader br = new BufferedReader(new FileReader(hashes_filename))) {
+                this.hashType = Hash.getHashType(br.readLine());
+                br.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            this.hashType = new ArrayList<>(Collections.singletonList(hashType));
+        }
     }
 }
