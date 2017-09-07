@@ -18,6 +18,7 @@
 package com.athena;
 
 import com.athena.attacks.Dictionary;
+import com.athena.attacks.Mask;
 import com.athena.utils.FileUtils;
 import com.athena.utils.Output;
 import com.athena.utils.Timer;
@@ -41,6 +42,8 @@ public class Athena {
     private static int mode;
     @Option(name = "-h", aliases = "--hash-type", usage = "Hash type in input file")
     private static int hashType;
+    @Option(name = "-k", aliases = "--mask", usage = "Mask to use")
+    private static String maskString;
     
     private static final String VERSION = "2.0";
     private static Timer timer;
@@ -69,6 +72,11 @@ public class Athena {
             case 101:
                 Dictionary dictionary = new Dictionary(wordlist_filename[0], hashFile_filename, hashType);
                 dictionary.attack();
+                break;
+
+            case 102:
+                Mask mask = new Mask(maskString, hashFile_filename, hashType);
+                mask.attack();
                 break;
 
             default:

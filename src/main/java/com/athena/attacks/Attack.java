@@ -43,18 +43,9 @@ public abstract class Attack {
 
     public abstract ArrayList<byte[]> getNextCandidates();
 
-    public void attack() {
-        for (byte[] fileBuffer : getNextCandidates())
-            for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
-                if (!hashman.isAllCracked()) {
-                    checkAttempt(candidate);
-                } else {
-                    return;
-                }
-            }
-    }
+    public abstract void attack();
 
-    private void checkAttempt(byte[] candidate) {
+    protected void checkAttempt(byte[] candidate) {
         byte[] candidateHash = getDigest(candidate);
 
         /*System.out.println();
@@ -98,5 +89,9 @@ public abstract class Attack {
         } else {
             this.hashType = new ArrayList<>(Collections.singletonList(hashType));
         }
+    }
+
+    public boolean isAllCracked() {
+        return hashman.isAllCracked();
     }
 }

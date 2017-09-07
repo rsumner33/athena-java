@@ -20,6 +20,7 @@ package com.athena.utils;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -76,5 +77,14 @@ public class StringUtils {
             }
         }
         return arrlist;
+    }
+
+    public static byte[] listToByteArray(List<Byte> in) {
+        final int n = in.size();
+        byte ret[] = new byte[n];
+        for (int i = 0; i < n; i++) {
+            ret[i] = in.get(i);
+        }
+        return ret;
     }
 }

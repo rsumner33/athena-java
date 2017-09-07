@@ -19,6 +19,7 @@ package com.athena.attacks;
 
 import com.athena.utils.FileUtils;
 import com.athena.utils.HashManager;
+import com.athena.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -31,6 +32,19 @@ public class Dictionary extends Attack {
         super.setHashman(new HashManager(hashes_filename));
     }
 
+    @Override
+    public void attack() {
+        for (byte[] fileBuffer : getNextCandidates())
+            for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
+                if (!super.isAllCracked()) {
+                    checkAttempt(candidate);
+                } else {
+                    return;
+                }
+            }
+    }
+
+    @Override
     public ArrayList<byte[]> getNextCandidates() {
         return FileUtils.getFileChunk(wordlist_filename);
     }

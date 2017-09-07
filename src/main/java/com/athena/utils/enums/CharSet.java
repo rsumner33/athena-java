@@ -17,6 +17,7 @@
 
 package com.athena.utils.enums;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public enum CharSet {
     }
 
     private static void initMapping() {
-        codeToCharsetMapping = new HashMap<Integer, CharSet>();
+        codeToCharsetMapping = new HashMap<>();
         for (CharSet s : values()) {
             codeToCharsetMapping.put(s.code, s);
         }
@@ -93,5 +94,13 @@ public enum CharSet {
 
     public byte[] getToSkip() {
         return toSkip;
+    }
+
+    public ArrayList<Byte> getCharsList() {
+        ArrayList<Byte> list = new ArrayList<>();
+        for (byte b : chars.getBytes()) {
+            list.add(b);
+        }
+        return list;
     }
 }
