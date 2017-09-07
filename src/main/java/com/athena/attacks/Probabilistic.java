@@ -1,23 +1,24 @@
 package com.athena.attacks;
 
 import com.athena.utils.CounterList;
+import com.athena.utils.FileUtils;
 import com.athena.utils.HashManager;
 import com.athena.utils.StringUtils;
 import com.athena.utils.enums.CharSet;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 
-public class Mask extends Attack {
+public class Probabilistic extends Attack {
+    private final String PROB_FILEPATH = "prob.txt";
     private CounterList<Byte> candidateElements;
-    private String mask;
 
-    public Mask(String mask, String hashes_filename, int hashType) {
+    public Probabilistic(String hashes_filename, int hashType) {
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
 
-        this.mask = mask;
         this.candidateElements = new CounterList<>();
-        parseMask(mask);
     }
 
     @Override
@@ -33,13 +34,23 @@ public class Mask extends Attack {
 
     @Override
     public ArrayList<byte[]> getNextCandidates() {
+        try {
+            for (byte[] fileBuffer : FileUtils.getFileChunk(PROB_FILEPATH)) {
+                for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
+                    parseCandidate(candidate);
+                }
+            }
+
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
         return null;
     }
 
-    private void parseMask(String mask) {
+    private void parseCandidate(byte[] candidate) {
         boolean modifier = false;
 
-        for (byte b : mask.getBytes()) {
+        for (byte b : candidate) {
             switch (b) {
                 case 63:
                     modifier = true;
@@ -70,9 +81,5 @@ public class Mask extends Attack {
                     }
             }
         }
-    }
-
-    public CounterList<Byte> getCandidateElements() {
-        return candidateElements;
     }
 }

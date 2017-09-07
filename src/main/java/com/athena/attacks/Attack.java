@@ -17,13 +17,11 @@
 
 package com.athena.attacks;
 
-import com.athena.Athena;
 import com.athena.hashfamily.Hash;
 import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
-import com.athena.utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -47,11 +45,6 @@ public abstract class Attack {
 
     protected void checkAttempt(byte[] candidate) {
         byte[] candidateHash = getDigest(candidate);
-
-        /*System.out.println();
-        hashman.printHashes();
-        System.out.println("Hash: " + com.athena.utils.StringUtils.byteArrayToHexString(candidateHash) + " Bytes: " + java.util.Arrays.toString(candidateHash));
-        System.out.println(hashman.hashExists(candidateHash));*/
 
         if (hashman.hashExists(candidateHash)) {
             hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString());

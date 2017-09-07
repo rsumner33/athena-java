@@ -44,6 +44,7 @@ public class Athena {
     private static int hashType;
     @Option(name = "-k", aliases = "--mask", usage = "Mask to use")
     private static String maskString;
+    //Add --increment for mask attack (only if mask is the same (static chars can be at beginning or end though))
     
     private static final String VERSION = "2.0";
     private static Timer timer;
@@ -54,7 +55,12 @@ public class Athena {
             clp.parseArgument(args);
             //Output.printStatus("Initialising", hashFile_filename, hashType, mode, 0);
 
+            //Change this to method that checks input for errors
             if (Mode.getMode(mode).requiresDict2() && wordlist_filename[1] == null) {
+                throw new IOException();
+            }
+
+            if (Mode.getMode(mode).requiresMask() && maskString == null) {
                 throw new IOException();
             }
         } catch (CmdLineException ex) {
@@ -82,7 +88,6 @@ public class Athena {
             default:
                 break;
         }
-
         timer.stopTimer();
     }
 
