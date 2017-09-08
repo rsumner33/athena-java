@@ -38,4 +38,8 @@ public class CounterList<T> {
         }
         return result;
     }
+
+    public void clear() {
+        elements.clear();
+    }
 }

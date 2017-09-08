@@ -96,11 +96,12 @@ public enum CharSet {
         return toSkip;
     }
 
-    public ArrayList<Byte> getCharsList() {
-        ArrayList<Byte> list = new ArrayList<>();
+    public ArrayList<byte[]> getCharsList() {
+        ArrayList<byte[]> arrays = new ArrayList<>();
+
         for (byte b : chars.getBytes()) {
-            list.add(b);
+            arrays.add(new byte[]{b});
         }
-        return list;
+        return arrays;
     }
 }

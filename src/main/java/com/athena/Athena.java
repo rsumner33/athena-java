@@ -19,6 +19,7 @@ package com.athena;
 
 import com.athena.attacks.Dictionary;
 import com.athena.attacks.Mask;
+import com.athena.attacks.Probabilistic;
 import com.athena.utils.FileUtils;
 import com.athena.utils.Output;
 import com.athena.utils.Timer;
@@ -44,6 +45,8 @@ public class Athena {
     private static int hashType;
     @Option(name = "-k", aliases = "--mask", usage = "Mask to use")
     private static String maskString;
+    @Option(name = "--increment", usage = "Increment mask")
+    private static boolean increment = false;
     //Add --increment for mask attack (only if mask is the same (static chars can be at beginning or end though))
     
     private static final String VERSION = "2.0";
@@ -81,8 +84,13 @@ public class Athena {
                 break;
 
             case 102:
-                Mask mask = new Mask(maskString, hashFile_filename, hashType);
+                Mask mask = new Mask(maskString, increment, hashFile_filename, hashType);
                 mask.attack();
+                break;
+
+            case 105:
+                Probabilistic probabilistic = new Probabilistic(hashFile_filename, hashType);
+                probabilistic.attack();
                 break;
 
             default:

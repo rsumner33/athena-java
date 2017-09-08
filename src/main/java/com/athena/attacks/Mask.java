@@ -8,14 +8,16 @@ import com.athena.utils.enums.CharSet;
 import java.util.*;
 
 public class Mask extends Attack {
-    private CounterList<Byte> candidateElements;
+    private CounterList<byte[]> candidateElements;
     private String mask;
+    private boolean increment;
 
-    public Mask(String mask, String hashes_filename, int hashType) {
+    public Mask(String mask, boolean increment, String hashes_filename, int hashType) {
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
 
         this.mask = mask;
+        this.increment = increment;
         this.candidateElements = new CounterList<>();
         parseMask(mask);
     }
@@ -24,14 +26,13 @@ public class Mask extends Attack {
     public void attack() {
         for (int i = 0; i < candidateElements.size(); i++) {
             if (!super.isAllCracked()) {
-                super.checkAttempt(StringUtils.listToByteArray(candidateElements.get(i)));
+                super.checkAttempt(StringUtils.stripList(candidateElements.get(i)));
             } else {
                 return;
             }
         }
     }
 
-    @Override
     public ArrayList<byte[]> getNextCandidates() {
         return null;
     }
@@ -66,13 +67,13 @@ public class Mask extends Attack {
                                 break;
                         }
                     } else {
-                        candidateElements.add(Collections.singletonList(b));
+                        candidateElements.add(Collections.singletonList(new byte[]{b}));
                     }
             }
         }
     }
 
-    public CounterList<Byte> getCandidateElements() {
+    public CounterList<byte[]> getCandidateElements() {
         return candidateElements;
     }
 }

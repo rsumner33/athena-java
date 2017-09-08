@@ -39,7 +39,7 @@ public abstract class Attack {
     private StringBuilder sb = new StringBuilder();
     private ArrayList<Integer> hashType;
 
-    public abstract ArrayList<byte[]> getNextCandidates();
+    //public abstract ArrayList<byte[]> getNextCandidates();
 
     public abstract void attack();
 

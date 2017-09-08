@@ -30,8 +30,8 @@ public class StringUtils {
 
     public static String byteArrayToHexString(byte[] b) {
         sb.setLength(0);
-        for (int i = 0; i < b.length; i++) {
-            sb.append(Integer.toHexString((b[i] & 0xFF) | 0x100).substring(1, 3));
+        for (byte aB : b) {
+            sb.append(Integer.toHexString((aB & 0xFF) | 0x100).substring(1, 3));
         }
         return sb.toString();
     }
@@ -79,12 +79,19 @@ public class StringUtils {
         return arrlist;
     }
 
-    public static byte[] listToByteArray(List<Byte> in) {
-        final int n = in.size();
-        byte ret[] = new byte[n];
-        for (int i = 0; i < n; i++) {
-            ret[i] = in.get(i);
+    public static byte[] stripList(List<byte[]> list) {
+        int length = 0;
+        for (byte[] b : list) {
+            length += b.length;
         }
-        return ret;
+
+        byte[] result = Arrays.copyOf(list.get(0), length);
+        int offset = list.get(0).length;
+
+        for (int i = 1; i < list.size(); i++) {
+            System.arraycopy(list.get(i), 0, result, offset, list.get(i).length);
+            offset += list.get(i).length;
+        }
+        return result;
     }
 }
