@@ -20,7 +20,6 @@ package com.athena;
 import com.athena.attacks.Dictionary;
 import com.athena.attacks.Mask;
 import com.athena.attacks.Probabilistic;
-import com.athena.utils.FileUtils;
 import com.athena.utils.Output;
 import com.athena.utils.Timer;
 import com.athena.utils.enums.Mode;
@@ -47,7 +46,7 @@ public class Athena {
     private static String maskString;
     @Option(name = "--increment", usage = "Increment mask")
     private static boolean increment = false;
-    //Add --increment for mask attack (only if mask is the same (static chars can be at beginning or end though))
+    //TODO Add --increment for mask attack (only if mask is the same (static chars can be at beginning or end though))
     
     private static final String VERSION = "2.0";
     private static Timer timer;
