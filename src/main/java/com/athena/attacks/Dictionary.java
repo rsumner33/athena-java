@@ -43,8 +43,7 @@ public class Dictionary extends Attack {
                 }
             }
     }
-
-    @Override
+    
     public ArrayList<byte[]> getNextCandidates() {
         return FileUtils.getFileChunk(wordlist_filename);
     }
