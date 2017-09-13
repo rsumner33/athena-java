@@ -1,4 +1,4 @@
-## *Athena 2* ![travis](https://travis-ci.org/ja-green/Athena-2.0.svg?branch=master)
+## *Athena 2* ##
 Advanced password hash recovery utility
 
 ### License ###
