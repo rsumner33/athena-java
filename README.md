@@ -7,7 +7,7 @@ Advanced password hash recovery utility
 ### Build ###
 | Travis   | ![travis](https://travis-ci.org/ja-green/Athena-2.0.svg?branch=master) |
 |----------|------------------------------------------------------------------------|
-| Coverity |                                                                        |
+| CircleCI | [![CircleCI](https://circleci.com/gh/ja-green/Athena-2.0/tree/master.svg?style=svg)](https://circleci.com/gh/ja-green/Athena-2.0/tree/master)|
 
 ------------------------------------------------------------------------------------
 
