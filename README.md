@@ -4,8 +4,9 @@ Advanced password hash recovery utility
 ### License ###
 **Athena** is licensed under the Apache 2.0 license. Refer to [LICENSE](LICENSE) for more information.
 
-### Building ###
-Travis | ![travis](https://travis-ci.org/ja-green/Athena-2.0.svg?branch=master)
+### Build ###
+|--------|------------------------------------------------------------------------|
+| Travis | ![travis](https://travis-ci.org/ja-green/Athena-2.0.svg?branch=master) |
 
 ### Attacks ###
 - Dictionary
