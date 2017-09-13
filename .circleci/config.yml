@@ -14,6 +14,3 @@ jobs:
       - run: mvn dependency:go-offline
       
       - run: mvn package
-      
-      - store_test_results:
-          path: build/circleci-reports
