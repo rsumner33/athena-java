@@ -6,6 +6,7 @@ Advanced password hash recovery utility
 
 ### Build ###
 | Travis   | ![travis](https://travis-ci.org/ja-green/Athena-2.0.svg?branch=master) |
+|----------|------------------------------------------------------------------------|
 | Coverity |                                                                        |
 
 ### Attacks ###
