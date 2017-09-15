@@ -34,7 +34,7 @@ public class Dictionary extends Attack {
 
     @Override
     public void attack() {
-        for (byte[] fileBuffer : getNextCandidates())
+        for (byte[] fileBuffer : getNextCandidates()) {
             for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
                 if (!super.isAllCracked()) {
                     checkAttempt(candidate);
@@ -42,9 +42,9 @@ public class Dictionary extends Attack {
                     return;
                 }
             }
+        }
     }
 
-    @Override
     public ArrayList<byte[]> getNextCandidates() {
         return FileUtils.getFileChunk(wordlist_filename);
     }

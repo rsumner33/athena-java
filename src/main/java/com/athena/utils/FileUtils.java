@@ -136,6 +136,6 @@ public class FileUtils {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return null;
+        return barrays;
     }
 }

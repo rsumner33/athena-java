@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Probabilistic extends Attack {
-    private final String PROB_FILEPATH = "prob.txt";
-    private final String WORD_FILEPATH = "words.txt";
-    private final String NAME_FILEPATH = "names.txt";
+    private final String PROB_FILEPATH = "resources/prob.txt";
+    private final String WORD_FILEPATH = "resources/words.txt";
+    private final String NAME_FILEPATH = "resources/names.txt";
 
     private ArrayList<byte[]> words;
     private ArrayList<byte[]> names;
@@ -31,6 +31,7 @@ public class Probabilistic extends Attack {
         this.words = new ArrayList<>();
         this.names = new ArrayList<>();
 
+        System.out.println("Prob constructor");
         initElements();
         initCandidates();
     }
@@ -38,9 +39,9 @@ public class Probabilistic extends Attack {
     @Override
     public void attack() {
         while (isMoreCandidates()) {
-/*            System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
+            System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
             System.out.println("ele - first: " + new String(StringUtils.stripList(candidateElements.get(0))));
-            System.out.println("ele - size: " + candidateElements.size());*/
+            System.out.println("ele - size: " + candidateElements.size());
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
                     super.checkAttempt(StringUtils.stripList(candidateElements.get(i)));

@@ -9,14 +9,20 @@ import java.util.*;
 
 public class Mask extends Attack {
     private CounterList<byte[]> candidateElements;
-    private String mask;
+    private byte[] mask;
     private boolean increment;
+    private boolean validMask = false;
 
     public Mask(String mask, boolean increment, String hashes_filename, int hashType) {
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
 
-        this.mask = mask;
+        //TODO check increment here and pass mask to other method parsing it to check validity and to reduce it
+        if (increment) {
+            validMask = validateMask();
+        }
+
+        this.mask = mask.getBytes();
         this.increment = increment;
         this.candidateElements = new CounterList<>();
         parseMask(mask);
@@ -31,6 +37,18 @@ public class Mask extends Attack {
                 return;
             }
         }
+    }
+
+    //TODO Add support for masks containing static chars
+    private boolean validateMask() {
+        byte comp = mask[1];
+
+        for (int i = 1; i < mask.length; i += 2) {
+            if (mask[i] != comp) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public ArrayList<byte[]> getNextCandidates() {
