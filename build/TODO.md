@@ -1,10 +1,14 @@
 ## TODO ##
 
+---
+
 ### Features ###
 - [ ] HTML Logging
 - [ ] Text Logging
 - [ ] Status Text
 - [ ] Post-processing
+
+---
 
 ### Attacks ###
 - [ ] PRINCE
@@ -14,6 +18,8 @@
 - [X] Mask
 - [X] Probabilistic
 - [X] Dictionary
+
+---
 
 ### Algorithms ###
 - [ ] MD4
