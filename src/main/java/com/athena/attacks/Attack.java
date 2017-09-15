@@ -59,7 +59,7 @@ public abstract class Attack {
 
     private byte[] getDigest(byte[] candidate) {
         try {
-            return (byte[]) digest.invoke(digestFunction, candidate);
+            return (byte[]) digest.invoke(digestFunction, (Object) candidate);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvocationTargetException ex) {
@@ -73,7 +73,14 @@ public abstract class Attack {
     }
 
     void initDigestInstance() {
-        digest = Hash.getHash(hashType.get(0)).getDigestInstance();
+        try {
+            digestFunction = Hash.getHash(hashType.get(0)).getClassname().newInstance();
+            digest = Hash.getHash(hashType.get(0)).getDigestInstance();
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     void setHashType(int hashType, String hashes_filename) {
