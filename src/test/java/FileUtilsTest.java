@@ -1,5 +1,6 @@
 import com.athena.hashfamily.Hash;
 import com.athena.hashfamily.md.MD5;
+import com.athena.utils.ArrayUtils;
 import com.athena.utils.FileUtils;
 import com.athena.utils.StringUtils;
 
@@ -12,7 +13,7 @@ public class FileUtilsTest {
         }*/
 
         for (byte[] bouter : FileUtils.getFileChunk("common.txt")) {
-            for (byte[] binner : StringUtils.formatFileBytes(bouter)) {
+            for (byte[] binner : ArrayUtils.formatFileBytes(bouter)) {
                 System.out.println(StringUtils.byteArrayToString(binner));
             }
         }
