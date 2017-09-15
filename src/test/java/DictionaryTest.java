@@ -13,6 +13,6 @@ public class DictionaryTest {
 
     @Test
     public void getNextCandidatesTest() {
-        Dictionary d = new Dictionary("test.txt", "test.txt", 0);
+        Dictionary d = new Dictionary("test.txt", "test.txt", 100);
     }
 }
