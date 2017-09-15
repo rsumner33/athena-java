@@ -26,6 +26,8 @@ import com.athena.utils.Output;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.logging.Level;
@@ -38,6 +40,8 @@ public abstract class Attack {
     private HashManager hashman;
     private StringBuilder sb = new StringBuilder();
     private ArrayList<Integer> hashType;
+    private Object digestFunction;
+    private Method digest;
 
     //public abstract ArrayList<byte[]> getNextCandidates();
 
@@ -54,21 +58,22 @@ public abstract class Attack {
     }
 
     private byte[] getDigest(byte[] candidate) {
-        switch (hashType.get(0)) {
-            case 100:
-                return MD5.digest(candidate);
-
-            case 200:
-                return SHA1.digest(candidate);
-
-            default:
-                break;
+        try {
+            return (byte[]) digest.invoke(digestFunction, candidate);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvocationTargetException ex) {
+            Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
         }
         return new byte[0];
     }
 
     void setHashman(HashManager hashman) {
         this.hashman = hashman;
+    }
+
+    void initDigestInstance() {
+        digest = Hash.getHash(hashType.get(0)).getDigestInstance();
     }
 
     void setHashType(int hashType, String hashes_filename) {

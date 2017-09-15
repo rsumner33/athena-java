@@ -17,6 +17,7 @@ public class Mask extends Attack {
     public Mask(String mask, boolean increment, String hashes_filename, int hashType) {
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
+        super.initDigestInstance();
 
         //TODO check increment here and pass mask to other method parsing it to check validity and to reduce it
         if (increment) {

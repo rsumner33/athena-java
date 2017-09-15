@@ -22,6 +22,7 @@ public class Probabilistic extends Attack {
     public Probabilistic(String hashes_filename, int hashType) {
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
+        super.initDigestInstance();
 
         this.candidateElements = new CounterList<>();
         this.candidates = new ArrayList<>();

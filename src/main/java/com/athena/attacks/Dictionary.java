@@ -30,6 +30,7 @@ public class Dictionary extends Attack {
         this.wordlist_filename = wordlist_filename;
         super.setHashType(hashType, hashes_filename);
         super.setHashman(new HashManager(hashes_filename));
+        super.initDigestInstance();
     }
 
     @Override
