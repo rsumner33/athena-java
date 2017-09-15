@@ -1,9 +1,6 @@
 package com.athena.attacks;
 
-import com.athena.utils.CounterList;
-import com.athena.utils.FileUtils;
-import com.athena.utils.HashManager;
-import com.athena.utils.StringUtils;
+import com.athena.utils.*;
 import com.athena.utils.enums.CharSet;
 
 import java.io.IOException;
@@ -40,11 +37,11 @@ public class Probabilistic extends Attack {
     public void attack() {
         while (isMoreCandidates()) {
             System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
-            System.out.println("ele - first: " + new String(StringUtils.stripList(candidateElements.get(0))));
+            System.out.println("ele - first: " + new String(ArrayUtils.stripList(candidateElements.get(0))));
             System.out.println("ele - size: " + candidateElements.size());
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
-                    super.checkAttempt(StringUtils.stripList(candidateElements.get(i)));
+                    super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
                 } else {
                     return;
                 }
@@ -98,7 +95,7 @@ public class Probabilistic extends Attack {
     private void initCandidates() {
         try {
             for (byte[] fileBuffer : FileUtils.getFileChunk(PROB_FILEPATH)) {
-                candidates.addAll(StringUtils.formatFileBytes(fileBuffer));
+                candidates.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
 
         } catch (NullPointerException ex) {
@@ -109,10 +106,10 @@ public class Probabilistic extends Attack {
     private void initElements() {
         try {
             for (byte[] fileBuffer : FileUtils.getFileChunk(WORD_FILEPATH)) {
-                words.addAll(StringUtils.formatFileBytes(fileBuffer));
+                words.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
             for (byte[] fileBuffer : FileUtils.getFileChunk(NAME_FILEPATH)) {
-                names.addAll(StringUtils.formatFileBytes(fileBuffer));
+                names.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
 
         } catch (NullPointerException ex) {

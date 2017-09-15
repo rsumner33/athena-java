@@ -40,7 +40,7 @@ public class HashManager {
     private void setHashes(String hashes_filename) {
         try {
             for (byte[] fileBuffer : FileUtils.getFileChunk(hashes_filename)) {
-                for (byte[] hash : StringUtils.formatFileBytes(fileBuffer)) {
+                for (byte[] hash : ArrayUtils.formatFileBytes(fileBuffer)) {
                     if (!(hash.length == 0) && !hashes.containsKey(byteArrayToString(hash))) {
                         hashes.put(byteArrayToString(hash), StringUtils.hexStringToByteArray(StringUtils.byteArrayToString(hash)));
                     }

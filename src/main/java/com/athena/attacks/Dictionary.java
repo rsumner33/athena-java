@@ -17,9 +17,9 @@
 
 package com.athena.attacks;
 
+import com.athena.utils.ArrayUtils;
 import com.athena.utils.FileUtils;
 import com.athena.utils.HashManager;
-import com.athena.utils.StringUtils;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class Dictionary extends Attack {
     @Override
     public void attack() {
         for (byte[] fileBuffer : getNextCandidates()) {
-            for (byte[] candidate : StringUtils.formatFileBytes(fileBuffer)) {
+            for (byte[] candidate : ArrayUtils.formatFileBytes(fileBuffer)) {
                 if (!super.isAllCracked()) {
                     checkAttempt(candidate);
                 } else {

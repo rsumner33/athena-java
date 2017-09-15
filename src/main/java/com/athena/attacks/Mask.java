@@ -1,5 +1,6 @@
 package com.athena.attacks;
 
+import com.athena.utils.ArrayUtils;
 import com.athena.utils.CounterList;
 import com.athena.utils.HashManager;
 import com.athena.utils.StringUtils;
@@ -32,7 +33,7 @@ public class Mask extends Attack {
     public void attack() {
         for (int i = 0; i < candidateElements.size(); i++) {
             if (!super.isAllCracked()) {
-                super.checkAttempt(StringUtils.stripList(candidateElements.get(i)));
+                super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
             } else {
                 return;
             }
