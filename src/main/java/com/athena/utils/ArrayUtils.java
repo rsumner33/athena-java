@@ -48,4 +48,11 @@ public class ArrayUtils {
         }
         return result;
     }
+
+    public static int byteArrayToInt(byte[] b) {
+        int b0 = b[0] - 48;
+        int b1 = b[1] - 48;
+
+        return (b0 << 3 + b0 << 1) + b1;
+    }
 }

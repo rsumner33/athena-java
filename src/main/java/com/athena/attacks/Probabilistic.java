@@ -3,9 +3,11 @@ package com.athena.attacks;
 import com.athena.utils.*;
 import com.athena.utils.enums.CharSet;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class Probabilistic extends Attack {
     private final String PROB_FILEPATH = "resources/prob.txt";
@@ -29,7 +31,6 @@ public class Probabilistic extends Attack {
         this.words = new ArrayList<>();
         this.names = new ArrayList<>();
 
-        //System.out.println("Prob constructor");
         initElements();
         initCandidates();
     }
@@ -37,9 +38,7 @@ public class Probabilistic extends Attack {
     @Override
     public void attack() {
         while (isMoreCandidates()) {
-            /*System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
-            System.out.println("ele - first: " + new String(ArrayUtils.stripList(candidateElements.get(0))));
-            System.out.println("ele - size: " + candidateElements.size());*/
+            System.out.println(StringUtils.byteArrayToString(ArrayUtils.stripList(candidateElements.get(0))));
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
                     super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
@@ -61,14 +60,24 @@ public class Probabilistic extends Attack {
                 return false;
             }
         } catch (NullPointerException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
 
     private void parseCandidate(byte[] candidate) {
-        //System.out.println(StringUtils.byteArrayToString(names.get(0)));
-        for (byte b : candidate) {
+        byte[] elements = Arrays.copyOfRange(candidate, 0, candidate.length - 2);
+        int length = ArrayUtils.byteArrayToInt(Arrays.copyOfRange(candidate, candidate.length - 2, candidate.length));
+
+        int staticChars = 0;
+        for (byte b : elements) {
+            if (b != (byte) 110 && b != (byte) 119) {
+                staticChars++;
+            }
+        }
+        int wordLength = length - staticChars;
+
+        for (byte b : elements) {
             switch (b) {
                 case 108:
                     candidateElements.add(CharSet.LOWER_ALPHABETIC.getCharsList());
@@ -83,10 +92,10 @@ public class Probabilistic extends Attack {
                     candidateElements.add(CharSet.UPPER_ALPHABETIC.getCharsList());
                     break;
                 case 110:
-                    candidateElements.add(names);
+                    candidateElements.add(names.stream().filter(n -> n.length == (wordLength)).collect(Collectors.toList()));
                     break;
                 case 119:
-                    candidateElements.add(words);
+                    candidateElements.add(words.stream().filter(w -> w.length == (wordLength)).collect(Collectors.toList()));
                     break;
                 default:
                     break;
