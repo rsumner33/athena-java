@@ -38,7 +38,6 @@ public class Probabilistic extends Attack {
     @Override
     public void attack() {
         while (isMoreCandidates()) {
-            System.out.println(StringUtils.byteArrayToString(ArrayUtils.stripList(candidateElements.get(0))));
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
                     super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
