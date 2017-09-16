@@ -29,7 +29,7 @@ public class Probabilistic extends Attack {
         this.words = new ArrayList<>();
         this.names = new ArrayList<>();
 
-        System.out.println("Prob constructor");
+        //System.out.println("Prob constructor");
         initElements();
         initCandidates();
     }
@@ -37,9 +37,9 @@ public class Probabilistic extends Attack {
     @Override
     public void attack() {
         while (isMoreCandidates()) {
-            System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
+            /*System.out.println("cand - curr index: " + new String(candidates.get(currentIndex - 1)));
             System.out.println("ele - first: " + new String(ArrayUtils.stripList(candidateElements.get(0))));
-            System.out.println("ele - size: " + candidateElements.size());
+            System.out.println("ele - size: " + candidateElements.size());*/
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
                     super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
@@ -67,6 +67,7 @@ public class Probabilistic extends Attack {
     }
 
     private void parseCandidate(byte[] candidate) {
+        //System.out.println(StringUtils.byteArrayToString(names.get(0)));
         for (byte b : candidate) {
             switch (b) {
                 case 108:

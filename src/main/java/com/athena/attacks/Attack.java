@@ -22,6 +22,7 @@ import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
+import com.athena.utils.enums.Mode;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

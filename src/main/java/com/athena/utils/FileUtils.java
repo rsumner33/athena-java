@@ -119,8 +119,8 @@ public class FileUtils {
             int nGet;
 
             while (mb.hasRemaining()) {
-                byte[] barray = new byte[8000];
                 nGet = Math.min(mb.remaining(), 8000);
+                byte[] barray = new byte[nGet];
                 mb.get(barray, 0, nGet);
                 barrays.add(barray);
             }
@@ -136,6 +136,6 @@ public class FileUtils {
                 Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return barrays;
+        return null;
     }
 }

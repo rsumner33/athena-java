@@ -9,6 +9,7 @@ public class ArrayUtils {
 
     public static ArrayList<byte[]> formatFileBytes(byte[] b) {
         int high, low = 0;
+        arrlist.clear();
 
         for (int i = 0; i < b.length; i++) {
             if (b[i] == 0) {
