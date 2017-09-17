@@ -6,6 +6,7 @@ import com.athena.utils.HashManager;
 import com.athena.utils.StringUtils;
 import com.athena.utils.enums.CharSet;
 
+import java.io.File;
 import java.util.*;
 
 public class Mask extends Attack {
@@ -14,9 +15,9 @@ public class Mask extends Attack {
     private boolean increment;
     private boolean validMask = false;
 
-    public Mask(String mask, boolean increment, String hashes_filename, int hashType) {
-        super.setHashType(hashType, hashes_filename);
-        super.setHashman(new HashManager(hashes_filename));
+    public Mask(String mask, boolean increment, ArrayList<byte[]> hashes, int hashType) {
+        super.setHashType(hashType, hashes);
+        super.setHashman(new HashManager(hashes));
         super.initDigestInstance();
 
         //TODO check increment here and pass mask to other method parsing it to check validity and to reduce it

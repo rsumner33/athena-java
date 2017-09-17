@@ -3,6 +3,7 @@ package com.athena.attacks;
 import com.athena.utils.*;
 import com.athena.utils.enums.CharSet;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -10,9 +11,9 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Probabilistic extends Attack {
-    private final String PROB_FILEPATH = "resources/prob.txt";
-    private final String WORD_FILEPATH = "resources/words.txt";
-    private final String NAME_FILEPATH = "resources/names.txt";
+    private final File PROBFILE = new File("resources/prob.txt");
+    private final File WORDFILE = new File("resources/words.txt");
+    private final File NAMEFILE = new File("resources/names.txt");
 
     private ArrayList<byte[]> words;
     private ArrayList<byte[]> names;
@@ -21,9 +22,9 @@ public class Probabilistic extends Attack {
 
     private int currentIndex = 0;
 
-    public Probabilistic(String hashes_filename, int hashType) {
-        super.setHashType(hashType, hashes_filename);
-        super.setHashman(new HashManager(hashes_filename));
+    public Probabilistic(ArrayList<byte[]> hashes, int hashType) {
+        super.setHashType(hashType, hashes);
+        super.setHashman(new HashManager(hashes));
         super.initDigestInstance();
 
         this.candidateElements = new CounterList<>();
@@ -104,7 +105,7 @@ public class Probabilistic extends Attack {
 
     private void initCandidates() {
         try {
-            for (byte[] fileBuffer : FileUtils.getFileChunk(PROB_FILEPATH)) {
+            for (byte[] fileBuffer : FileUtils.getFileChunk(PROBFILE)) {
                 candidates.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
 
@@ -115,10 +116,10 @@ public class Probabilistic extends Attack {
 
     private void initElements() {
         try {
-            for (byte[] fileBuffer : FileUtils.getFileChunk(WORD_FILEPATH)) {
+            for (byte[] fileBuffer : FileUtils.getFileChunk(WORDFILE)) {
                 words.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
-            for (byte[] fileBuffer : FileUtils.getFileChunk(NAME_FILEPATH)) {
+            for (byte[] fileBuffer : FileUtils.getFileChunk(NAMEFILE)) {
                 names.addAll(ArrayUtils.formatFileBytes(fileBuffer));
             }
 

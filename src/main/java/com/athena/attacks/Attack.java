@@ -22,9 +22,11 @@ import com.athena.hashfamily.md.MD5;
 import com.athena.hashfamily.sha.SHA1;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
+import com.athena.utils.StringUtils;
 import com.athena.utils.enums.Mode;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -52,7 +54,7 @@ public abstract class Attack {
         byte[] candidateHash = getDigest(candidate);
 
         if (hashman.hashExists(candidateHash)) {
-            hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString());
+            hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString(), candidate);
             Output.printCracked(sb.toString(), byteArrayToString(candidate));
             sb.setLength(0);
         }
@@ -73,6 +75,10 @@ public abstract class Attack {
         this.hashman = hashman;
     }
 
+    public HashManager getHashman() {
+        return this.hashman;
+    }
+
     void initDigestInstance() {
         try {
             digestFunction = Hash.getHash(hashType.get(0)).getClassname().newInstance();
@@ -84,14 +90,9 @@ public abstract class Attack {
         }
     }
 
-    void setHashType(int hashType, String hashes_filename) {
+    void setHashType(int hashType, ArrayList<byte[]> hashes) {
         if (hashType == 0 || !Hash.hashTypeExists(hashType)) {
-            try (BufferedReader br = new BufferedReader(new FileReader(hashes_filename))) {
-                this.hashType = Hash.getHashType(br.readLine());
-                br.close();
-            } catch (IOException ex) {
-                Logger.getLogger(Attack.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            this.hashType = Hash.getHashType(StringUtils.byteArrayToHexString(hashes.get(0)));
         } else {
             this.hashType = new ArrayList<>(Collections.singletonList(hashType));
         }

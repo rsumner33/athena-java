@@ -21,15 +21,16 @@ import com.athena.utils.ArrayUtils;
 import com.athena.utils.FileUtils;
 import com.athena.utils.HashManager;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class Dictionary extends Attack {
-    private String wordlist_filename;
+    private File wordlist;
 
-    public Dictionary(String wordlist_filename, String hashes_filename, int hashType) {
-        this.wordlist_filename = wordlist_filename;
-        super.setHashType(hashType, hashes_filename);
-        super.setHashman(new HashManager(hashes_filename));
+    public Dictionary(String wordlist_filename, ArrayList<byte[]> hashes, int hashType) {
+        this.wordlist = new File(wordlist_filename);
+        super.setHashType(hashType, hashes);
+        super.setHashman(new HashManager(hashes));
         super.initDigestInstance();
     }
 
@@ -47,6 +48,6 @@ public class Dictionary extends Attack {
     }
 
     public ArrayList<byte[]> getNextCandidates() {
-        return FileUtils.getFileChunk(wordlist_filename);
+        return FileUtils.getFileChunk(wordlist);
     }
 }
