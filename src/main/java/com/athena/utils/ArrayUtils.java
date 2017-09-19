@@ -61,6 +61,32 @@ public class ArrayUtils {
         return (b0 << 3 + b0 << 1) + b1;
     }
 
+    public static ArrayList<byte[]> split(byte[] arr, byte delimiter) {
+        ArrayList<byte[]> result = new ArrayList<>();
+        int high, low = 0;
+
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == 0) {
+                return result;
+            }
+
+            if (arr[i] == delimiter) {
+                high = i;
+                result.add(Arrays.copyOfRange(arr, low, high));
+                low = high + 1;
+            }
+
+            if (i == arr.length - 1) {
+                high = i + 1;
+                if (low > high) {
+                    low = high;
+                }
+                result.add(Arrays.copyOfRange(arr, low, high));
+            }
+        }
+        return result;
+    }
+
     private static void getFileProperties(byte[] arr) {
         for (byte b : arr) {
             if (b == 13) {

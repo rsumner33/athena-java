@@ -6,6 +6,7 @@ import com.athena.utils.enums.CharSet;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -66,41 +67,119 @@ public class Probabilistic extends Attack {
     }
 
     private void parseCandidate(byte[] candidate) {
-        byte[] elements = Arrays.copyOfRange(candidate, 0, candidate.length - 2);
-        int length = ArrayUtils.byteArrayToInt(Arrays.copyOfRange(candidate, candidate.length - 2, candidate.length));
+        ArrayList<byte[]> elements = ArrayUtils.split(candidate, (byte) 33);
 
-        int staticChars = 0;
-        for (byte b : elements) {
-            if (b != (byte) 110 && b != (byte) 119) {
-                staticChars++;
-            }
-        }
-        int wordLength = length - staticChars;
-
-        for (byte b : elements) {
-            switch (b) {
+        for (byte[] element : elements) {
+            switch (element[0]) {
                 case 108:
-                    candidateElements.add(CharSet.LOWER_ALPHABETIC.getCharsList());
+                    addStaticChars(element[0], element);
                     break;
                 case 100:
-                    candidateElements.add(CharSet.NUMERIC.getCharsList());
+                    addStaticChars(element[0], element);
                     break;
                 case 115:
-                    candidateElements.add(CharSet.SPECIAL.getCharsList());
+                    addStaticChars(element[0], element);
                     break;
                 case 117:
-                    candidateElements.add(CharSet.UPPER_ALPHABETIC.getCharsList());
+                    addStaticChars(element[0], element);
                     break;
                 case 110:
-                    candidateElements.add(names.stream().filter(n -> n.length == (wordLength)).collect(Collectors.toList()));
+                    addNames(element);
                     break;
                 case 119:
-                    candidateElements.add(words.stream().filter(w -> w.length == (wordLength)).collect(Collectors.toList()));
+                    addWords(element);
                     break;
                 default:
                     break;
             }
         }
+    }
+
+    private void addStaticChars(byte b, byte[] element) {
+        List<byte[]> charset;
+
+        switch (b) {
+            case 108:
+                charset = CharSet.LOWER_ALPHABETIC.getCharsList();
+                break;
+            case 100:
+                charset = CharSet.NUMERIC.getCharsList();
+                break;
+            case 115:
+                charset = CharSet.SPECIAL.getCharsList();
+                break;
+            case 117:
+                charset = CharSet.UPPER_ALPHABETIC.getCharsList();
+                break;
+            default:
+                charset = new ArrayList<>();
+        }
+
+        if (element[element.length - 1] != b) {
+            CounterList<byte[]> nums = new CounterList<>();
+            ArrayList<byte[]> temp = new ArrayList<>();
+            ArrayList<byte[]> result = new ArrayList<>();
+
+            int repeatLength = element[element.length - 1] - 48;
+            for (int i = 0; i < element.length - 1; i++) {
+                nums.add(charset);
+            }
+
+            for (int i = 0; i < nums.size(); i++) {
+                int count = 0;
+                byte[] arr = ArrayUtils.stripList(nums.get(i));
+
+                for (int j = 1; j < arr.length; j++) {
+                    if (arr[0] == arr[j]) {
+                        count++;
+                    }
+                }
+
+                if (count != arr.length - 1) {
+                    temp.add(arr);
+                } else if (arr.length == 1) {
+                    temp.add(arr);
+                }
+            }
+
+            for (byte[] t : temp) {
+                byte[] resultArray = new byte[t.length * repeatLength];
+                for (int i = 0; i < repeatLength; i++) {
+                    System.arraycopy(t, 0, resultArray, i * t.length, t.length);
+                }
+                result.add(resultArray);
+            }
+            candidateElements.add(result);
+        } else {
+            for (byte ignored : element) {
+                candidateElements.add(charset);
+            }
+        }
+    }
+
+    private void addNames(byte[] element) {
+        if (element[element.length - 1] == 76) {
+            int length = element[element.length - 2] - 48;
+            candidateElements.add(l33tify(names.stream().filter(n -> n.length == length).collect(Collectors.toList())));
+        } else {
+            int length = element[element.length - 1] - 48;
+            candidateElements.add(names.stream().filter(n -> n.length == length).collect(Collectors.toList()));
+        }
+    }
+
+    private void addWords(byte[] element) {
+        if (element[element.length - 1] == 76) {
+            int length = element[element.length - 2] - 48;
+            candidateElements.add(l33tify(words.stream().filter(w -> w.length == (length)).collect(Collectors.toList())));
+        } else {
+            int length = element[element.length - 1] - 48;
+            candidateElements.add(words.stream().filter(w -> w.length == (length)).collect(Collectors.toList()));
+        }
+    }
+
+    //TODO - Implement this
+    private List<byte[]> l33tify(List<byte[]> candidates) {
+        return candidates;
     }
 
     private void initCandidates() {
@@ -124,7 +203,7 @@ public class Probabilistic extends Attack {
             }
 
         } catch (NullPointerException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
