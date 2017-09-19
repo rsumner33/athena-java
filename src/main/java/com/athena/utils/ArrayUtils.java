@@ -6,20 +6,25 @@ import java.util.List;
 
 public class ArrayUtils {
     private static ArrayList<byte[]> arrlist = new ArrayList<>();
+    private static int lineDelim;
+    private static int increment;
 
     public static ArrayList<byte[]> formatFileBytes(byte[] b) {
-        int high, low = 0;
+        getFileProperties(b);
+
         arrlist.clear();
+
+        int high, low = 0;
 
         for (int i = 0; i < b.length; i++) {
             if (b[i] == 0) {
                 return arrlist;
             }
 
-            if (b[i] == 13) {
+            if (b[i] == lineDelim) {
                 high = i;
                 arrlist.add(Arrays.copyOfRange(b, low, high));
-                low = high + 2;
+                low = high + increment;
             }
 
             if (i == b.length - 1) {
@@ -54,5 +59,17 @@ public class ArrayUtils {
         int b1 = b[1] - 48;
 
         return (b0 << 3 + b0 << 1) + b1;
+    }
+
+    private static void getFileProperties(byte[] arr) {
+        for (byte b : arr) {
+            if (b == 13) {
+                lineDelim = 13;
+                increment = 2;
+                return;
+            }
+        }
+        lineDelim = 10;
+        increment = 1;
     }
 }
