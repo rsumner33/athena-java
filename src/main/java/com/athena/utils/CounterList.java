@@ -5,40 +5,41 @@ import java.util.Collections;
 import java.util.List;
 
 public class CounterList<T> {
-    private final List<List<byte[]>> elements;
-    private int size = 1;
+    private final List<List<T>> elements;
 
     public CounterList() {
-        this.elements = new ArrayList<>();
+        elements = new ArrayList<>();
     }
 
-    public CounterList(List<List<byte[]>> elements) {
+    public CounterList(List<List<T>> elements) {
         this.elements = Collections.unmodifiableList(elements);
     }
 
-    public void add(List<byte[]> element) {
+    public void add(List<T> element) {
         elements.add(element);
-        size *= element.size();
     }
 
-    public byte[] get(int index) {
-        List<byte[]> result = new ArrayList<>();
+    public List<T> get(int index) {
+        List<T> result = new ArrayList<>();
         for (int i = elements.size() - 1; i >= 0; i--) {
-            List<byte[]> counter = elements.get(i);
+            List<T> counter = elements.get(i);
             int counterSize = counter.size();
             result.add(counter.get(index % counterSize));
             index /= counterSize;
         }
         Collections.reverse(result);
-        return ArrayUtils.stripList(result);
+        return result;
     }
 
     public int size() {
-        return size;
+        int result = 1;
+        for (List<T> next : elements) {
+            result *= next.size();
+        }
+        return result;
     }
 
     public void clear() {
         elements.clear();
-        size = 1;
     }
 }

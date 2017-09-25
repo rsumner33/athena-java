@@ -1,9 +1,10 @@
 package com.athena.attacks;
 
-import com.athena.rules.RulesProcessor;
-import com.athena.utils.*;
+import com.athena.utils.ArrayUtils;
+import com.athena.utils.CounterList;
+import com.athena.utils.HashManager;
+import com.athena.utils.StringUtils;
 import com.athena.utils.enums.CharSet;
-import com.athena.utils.enums.Mode;
 
 import java.io.File;
 import java.util.*;
@@ -12,16 +13,12 @@ public class Mask extends Attack {
     private CounterList<byte[]> candidateElements;
     private byte[] mask;
     private boolean increment;
-    private boolean complexityUpdateRequired = true;
     private boolean validMask = false;
 
-    public Mask(String mask, boolean increment, ArrayList<byte[]> hashes, int hashType, String[] rules) {
+    public Mask(String mask, boolean increment, ArrayList<byte[]> hashes, int hashType) {
         super.setHashType(hashType, hashes);
         super.setHashman(new HashManager(hashes));
-        super.setRulesProcessor(new RulesProcessor(rules));
         super.initDigestInstance();
-
-        Output.printDetails("Active");
 
         //TODO check increment here and pass mask to other method parsing it to check validity and to reduce it
         if (increment) {
@@ -36,14 +33,9 @@ public class Mask extends Attack {
 
     @Override
     public void attack() {
-        if (complexityUpdateRequired) {
-            Output.updateComplexity(candidateElements.size());
-            complexityUpdateRequired = false;
-        }
-
         for (int i = 0; i < candidateElements.size(); i++) {
             if (!super.isAllCracked()) {
-                super.checkAttempt(candidateElements.get(i));
+                super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
             } else {
                 return;
             }
@@ -100,5 +92,9 @@ public class Mask extends Attack {
                     }
             }
         }
+    }
+
+    public CounterList<byte[]> getCandidateElements() {
+        return candidateElements;
     }
 }

@@ -17,20 +17,22 @@
 
 package com.athena.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.athena.utils.StringUtils.byteArrayToString;
 
 public class HashManager {
-    private ArrayList<byte[]> hashes;
-    private ArrayList<byte[]> cracked;
+    private HashMap<String, byte[]> hashes;
+    private ArrayList<String> cracked;
     private ArrayList<byte[]> plains;
 
     public HashManager(ArrayList<byte[]> hashesIn) {
-        //hashes = new HashMap<>();
-        hashes = new ArrayList<>();
+        hashes = new HashMap<>();
         cracked = new ArrayList<>();
         plains = new ArrayList<>();
 
@@ -41,33 +43,20 @@ public class HashManager {
         try {
             for (byte[] hash : hashesIn) {
                 //System.out.println("HashIN: " + StringUtils.byteArrayToHexString(hash));
-                if (!(hash.length == 0) && !hashExists(hash)) {
-                    hashes.add(hash);
+                if (!(hash.length == 0) && !hashes.containsKey(byteArrayToString(hash))) {
+                    hashes.put(StringUtils.byteArrayToHexString(hash), hash);
                 }
             }
-
-            hashes.sort((b1, b2) -> {
-                int len = Math.min(b1.length, b2.length);
-                for (int i = 0; i < len; i++) {
-                    int i1 = b1[i] < 0 ? 256 + b1[i] : b1[i];
-                    int i2 = b2[i] < 0 ? 256 + b2[i] : b2[i];
-                    int cmp = i1 - i2;
-                    if (cmp != 0) {
-                        return cmp;
-                    }
-                }
-                return b1.length - b2.length;
-            });
         } catch (NullPointerException ex) {
             Logger.getLogger(FileUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public ArrayList<byte[]> getHashes() {
+    public HashMap<String, byte[]> getHashes() {
         return hashes;
     }
 
-    public ArrayList<byte[]> getCracked() {
+    public ArrayList<String> getCracked() {
         return cracked;
     }
 
@@ -79,21 +68,19 @@ public class HashManager {
         return cracked.size();
     }
 
-    public boolean hashExists(byte[] hashIn) {
-        for (byte[] hash : hashes) {
-            if (hash[0] > hashIn[0]) {
-                return false;
-            }
-            if (Arrays.equals(hash, hashIn)) {
+    public boolean hashExists(byte[] hash) {
+        for (Map.Entry<String, byte[]> entry : hashes.entrySet()) {
+            if (Arrays.equals(entry.getValue(), hash)) {
                 return true;
             }
         }
         return false;
     }
 
-    public void setCracked(byte[] hash, byte[] plaintext) {
-        hashes.remove(getHashIndex(hash));
+    public void setCracked(String hash, byte[] plaintext) {
+        hashes.remove(hash);
         cracked.add(hash);
+
         plains.add(plaintext);
     }
 
@@ -101,12 +88,9 @@ public class HashManager {
         return plains;
     }
 
-    private int getHashIndex(byte[] hashIn) {
-        for (byte[] hash : hashes) {
-            if (Arrays.equals(hash, hashIn)) {
-                return hashes.indexOf(hash);
-            }
+    public void printHashes() {
+        for (Map.Entry<String, byte[]> entry : hashes.entrySet()) {
+            System.out.println("Key: " + entry.getKey() + " : " + "Value: " + Arrays.toString(entry.getValue()));
         }
-        return -1;
     }
 }
