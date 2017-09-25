@@ -18,17 +18,11 @@
 package com.athena.attacks;
 
 import com.athena.hashfamily.Hash;
-import com.athena.hashfamily.md.MD5;
-import com.athena.hashfamily.sha.SHA1;
+import com.athena.rules.RulesProcessor;
 import com.athena.utils.HashManager;
 import com.athena.utils.Output;
 import com.athena.utils.StringUtils;
-import com.athena.utils.enums.Mode;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -36,27 +30,28 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static com.athena.utils.StringUtils.byteArrayToHexString;
-import static com.athena.utils.StringUtils.byteArrayToString;
-
 public abstract class Attack {
+    private final int hashMax = 1000000;
     private HashManager hashman;
-    private StringBuilder sb = new StringBuilder();
+    private RulesProcessor rulesProcessor;
     private ArrayList<Integer> hashType;
     private Object digestFunction;
     private Method digest;
-
-    //public abstract ArrayList<byte[]> getNextCandidates();
+    private double counter = 0;
 
     public abstract void attack();
 
+    //TODO - change this to work with ArrayList<byte[]> so that rules can be processed in chunks (needs a change in CounterList structure
     protected void checkAttempt(byte[] candidate) {
+        counter++;
+        if (counter == hashMax) {
+            Output.printDetails("Active");
+            counter = 0;
+        }
         byte[] candidateHash = getDigest(candidate);
-
         if (hashman.hashExists(candidateHash)) {
-            hashman.setCracked(sb.append(byteArrayToHexString(candidateHash)).toString(), candidate);
-            Output.printCracked(sb.toString(), byteArrayToString(candidate));
-            sb.setLength(0);
+            hashman.setCracked(candidateHash, candidate);
+            Output.updateRecovered();
         }
     }
 
@@ -79,6 +74,10 @@ public abstract class Attack {
         return this.hashman;
     }
 
+    void setRulesProcessor(RulesProcessor rulesProcessor) {
+        this.rulesProcessor = rulesProcessor;
+    }
+
     void initDigestInstance() {
         try {
             digestFunction = Hash.getHash(hashType.get(0)).getClassname().newInstance();
@@ -96,6 +95,7 @@ public abstract class Attack {
         } else {
             this.hashType = new ArrayList<>(Collections.singletonList(hashType));
         }
+        Output.updateHashType(this.hashType.get(0));
     }
 
     public boolean isAllCracked() {

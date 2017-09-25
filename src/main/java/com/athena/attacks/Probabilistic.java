@@ -1,12 +1,12 @@
 package com.athena.attacks;
 
+import com.athena.rules.RulesProcessor;
 import com.athena.utils.*;
 import com.athena.utils.enums.CharSet;
+import com.athena.utils.enums.Mode;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -21,12 +21,16 @@ public class Probabilistic extends Attack {
     private ArrayList<byte[]> candidates;
     private CounterList<byte[]> candidateElements;
 
+    private boolean complexityUpdateRequired = true;
     private int currentIndex = 0;
 
-    public Probabilistic(ArrayList<byte[]> hashes, int hashType) {
+    public Probabilistic(ArrayList<byte[]> hashes, int hashType, String[] rules) {
         super.setHashType(hashType, hashes);
         super.setHashman(new HashManager(hashes));
+        super.setRulesProcessor(new RulesProcessor(rules));
         super.initDigestInstance();
+
+        Output.printDetails("Active");
 
         this.candidateElements = new CounterList<>();
         this.candidates = new ArrayList<>();
@@ -40,9 +44,14 @@ public class Probabilistic extends Attack {
     @Override
     public void attack() {
         while (isMoreCandidates()) {
+            if (complexityUpdateRequired) {
+                Output.updateComplexity(candidateElements.size() * FileUtils.getLineCount(PROBFILE));
+                complexityUpdateRequired = false;
+            }
+
             for (int i = 0; i < candidateElements.size(); i++) {
                 if (!super.isAllCracked()) {
-                    super.checkAttempt(ArrayUtils.stripList(candidateElements.get(i)));
+                    super.checkAttempt(candidateElements.get(i));
                 } else {
                     return;
                 }
@@ -53,8 +62,11 @@ public class Probabilistic extends Attack {
     public boolean isMoreCandidates() {
         try {
             if (currentIndex < candidates.size()) {
+                byte[] currentCandidate = candidates.get(currentIndex);
                 candidateElements.clear();
-                parseCandidate(candidates.get(currentIndex));
+
+                Output.updateCurrent(StringUtils.byteArrayToString(currentCandidate));
+                parseCandidate(currentCandidate);
                 currentIndex++;
                 return true;
             } else {
@@ -127,7 +139,7 @@ public class Probabilistic extends Attack {
 
             for (int i = 0; i < nums.size(); i++) {
                 int count = 0;
-                byte[] arr = ArrayUtils.stripList(nums.get(i));
+                byte[] arr = nums.get(i);
 
                 for (int j = 1; j < arr.length; j++) {
                     if (arr[0] == arr[j]) {
@@ -157,28 +169,97 @@ public class Probabilistic extends Attack {
         }
     }
 
+    // Add multiple
     private void addNames(byte[] element) {
-        if (element[element.length - 1] == 76) {
-            int length = element[element.length - 2] - 48;
-            candidateElements.add(l33tify(names.stream().filter(n -> n.length == length).collect(Collectors.toList())));
-        } else {
-            int length = element[element.length - 1] - 48;
-            candidateElements.add(names.stream().filter(n -> n.length == length).collect(Collectors.toList()));
+        final int length;
+        switch (element[element.length - 1]) {
+            case 76:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(l33tify(names.stream().filter(n -> n.length == length).collect(Collectors.toList())));
+                break;
+            case 67:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(capitalise(names.stream().filter(n -> n.length == length).collect(Collectors.toList())));
+                break;
+            case 85:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(uppercase(names.stream().filter(n -> n.length == length).collect(Collectors.toList())));
+                break;
+            default:
+                length = element[element.length - 1] - 48;
+                candidateElements.add(names.stream().filter(n -> n.length == length).collect(Collectors.toList()));
+                break;
         }
     }
 
     private void addWords(byte[] element) {
-        if (element[element.length - 1] == 76) {
-            int length = element[element.length - 2] - 48;
-            candidateElements.add(l33tify(words.stream().filter(w -> w.length == (length)).collect(Collectors.toList())));
-        } else {
-            int length = element[element.length - 1] - 48;
-            candidateElements.add(words.stream().filter(w -> w.length == (length)).collect(Collectors.toList()));
+        final int length;
+        switch (element[element.length - 1]) {
+            case 76:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(l33tify(words.stream().filter(w -> w.length == length).collect(Collectors.toList())));
+                break;
+            case 67:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(capitalise(words.stream().filter(w -> w.length == length).collect(Collectors.toList())));
+                break;
+            case 85:
+                length = element[element.length - 2] - 48;
+                candidateElements.add(uppercase(words.stream().filter(w -> w.length == length).collect(Collectors.toList())));
+                break;
+            default:
+                length = element[element.length - 1] - 48;
+                candidateElements.add(words.stream().filter(w -> w.length == length).collect(Collectors.toList()));
+                break;
         }
     }
 
     //TODO - Implement this
     private List<byte[]> l33tify(List<byte[]> candidates) {
+//        HashMap<Byte, Byte[]> dict = l33tHashMap();
+//        for (int i = 0; i < candidates.size(); i++) {
+//            byte[] word = candidates.get(i);
+//            for (int j = 0; j < word.length; j++) {
+//                if (dict.get((int) word[j]) != null) {
+//                    word[j] = (byte) (int) dict.get((int) word[j]);
+//                }
+//            }
+//        }
+        return candidates;
+    }
+
+    private final HashMap<Byte, Byte[]> l33tHashMap() {
+        // Numerical l33t dictionary
+        HashMap<Byte, Byte[]> dict = new HashMap<>();
+        dict.put((byte) 97, new Byte[]{(byte) 52});   // A -> 4
+        dict.put((byte) 98, new Byte[]{(byte) 56});   // B -> 8
+        dict.put((byte) 101, new Byte[]{(byte) 51});  // E -> 3
+        dict.put((byte) 103, new Byte[]{(byte) 54});  // G -> 6
+        dict.put((byte) 105, new Byte[]{(byte) 49});  // I -> 1
+        dict.put((byte) 111, new Byte[]{(byte) 48});  // O -> 0
+        dict.put((byte) 115, new Byte[]{(byte) 53});  // S -> 5
+        dict.put((byte) 116, new Byte[]{(byte) 55});  // T -> 7
+        dict.put((byte) 122, new Byte[]{(byte) 50});  // Z -> 2
+        return dict;
+    }
+
+    private List<byte[]> capitalise(List<byte[]> candidates) {
+        for (int i = 0; i < candidates.size(); i++) {
+            byte[] word = candidates.get(i);
+            word[0] -= 32;
+            candidates.set(i, word);
+        }
+        return candidates;
+    }
+
+    private List<byte[]> uppercase(List<byte[]> candidates) {
+        for (int i = 0; i < candidates.size(); i++) {
+            byte[] word = candidates.get(i);
+            for (int j = 0; j < word.length; j++) {
+                word[j] -= 32;
+            }
+            candidates.set(i, word);
+        }
         return candidates;
     }
 
